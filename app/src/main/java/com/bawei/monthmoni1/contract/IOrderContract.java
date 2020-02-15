@@ -13,10 +13,10 @@ public interface IOrderContract {
         void onFailuer(Throwable throwable);
     }
     interface IPresneter{
-        void getOrderData(int status);
+        void getOrderData(int page,int status);
     }
     interface IModel{
-        void getOrderData(int status,IModelCallback iModelCallback);
+        void getOrderData(int page,int status,IModelCallback iModelCallback);
         interface IModelCallback{
             void onSuccess(OrderBean orderBean);
             void onFailuer(Throwable throwable);

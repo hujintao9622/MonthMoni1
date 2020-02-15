@@ -3,8 +3,8 @@ package com.bawei.monthmoni1.view.fragment;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -14,6 +14,11 @@ import com.bawei.monthmoni1.contract.IOrderContract;
 import com.bawei.monthmoni1.model.bean.OrderBean;
 import com.bawei.monthmoni1.presenter.OrderPresenter;
 import com.bawei.monthmoni1.view.adapter.OrderAdapter;
+import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
+import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
+import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,12 +31,37 @@ import butterknife.BindView;
  * 时间:  2020/2/14 0014 下午 2:42
  */
 public class OrderFragment extends BaseFragment<OrderPresenter> implements IOrderContract.IView {
+
     @BindView(R.id.or_it_lv)
     RecyclerView orItLv;
+    @BindView(R.id.or_it_sm)
+    SmartRefreshLayout orItSm;
     private int key = 0;
-    List<OrderBean.OrderListBean> list=new ArrayList<>();
+    private int page = 1;
+    List<OrderBean.OrderListBean> list = new ArrayList<>();
+
     @Override
     protected void initView(View view) {
+        orItSm.setEnableRefresh(true);
+        orItSm.setEnableLoadMore(true);
+        orItSm.setOnRefreshListener(new OnRefreshListener() {
+            @Override
+            public void onRefresh(@NonNull RefreshLayout refreshLayout) {
+                list.clear();
+                page=1;
+                mPresenter.getOrderData(page, key);
+                orItSm.finishRefresh();
+            }
+        });
+        orItSm.setOnLoadMoreListener(new OnLoadMoreListener() {
+            @Override
+            public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
+                page++;
+                mPresenter.getOrderData(1, key);
+                orItSm.finishLoadMore();
+            }
+        });
+
 
     }
 
@@ -51,7 +81,7 @@ public class OrderFragment extends BaseFragment<OrderPresenter> implements IOrde
         if (arguments != null) {
             key = arguments.getInt("key");
         }
-        mPresenter.getOrderData(key);
+        mPresenter.getOrderData(page, key);
     }
 
     public static OrderFragment getInstance(int value) {
@@ -73,6 +103,6 @@ public class OrderFragment extends BaseFragment<OrderPresenter> implements IOrde
 
     @Override
     public void onFailuer(Throwable throwable) {
-        Log.e("tag",throwable.getMessage());
+        Log.e("tag", throwable.getMessage());
     }
 }

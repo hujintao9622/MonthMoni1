@@ -3,6 +3,7 @@ package com.bawei.monthmoni1.view.adapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -46,8 +47,19 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.MyViewHolder
         long orderTime = orderListBean.getOrderTime();
         String format = simpleDateFormat.format(orderTime);
         holder.orIteTime.setText(format);
-        //holder.orIteLv.setLayoutManager(new LinearLayoutManager(holder.itemView.getContext()));
-        //holder.orIteLv.setAdapter();
+        int orderStatus = orderListBean.getOrderStatus();
+
+        if (orderStatus==1){
+            holder.orItBt.setText("去支付");
+        }else if (orderStatus==2){
+            holder.orItBt.setText("确认收货");
+        }else if (orderStatus==3){
+            holder.orItBt.setText("待评价");
+        }else if (orderStatus==9){
+           holder.orItBt.setVisibility(View.GONE);
+        }
+        holder.orIteLv.setLayoutManager(new LinearLayoutManager(holder.itemView.getContext()));
+        holder.orIteLv.setAdapter(new OrderItemAdapter(orderListBean.getDetailList()));
     }
 
     @Override
@@ -62,6 +74,8 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.MyViewHolder
         RecyclerView orIteLv;
         @BindView(R.id.or_ite_time)
         TextView orIteTime;
+        @BindView(R.id.or_ite_bt)
+        Button orItBt;
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);

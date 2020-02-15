@@ -16,8 +16,8 @@ import io.reactivex.schedulers.Schedulers;
  */
 public class OrderModel implements IOrderContract.IModel {
     @Override
-    public void getOrderData(int status, IModelCallback iModelCallback) {
-        NetUtil.getInstance().getApi().ord(27823,"158166443136227823",1,10,status)
+    public void getOrderData(int page,int status, IModelCallback iModelCallback) {
+        NetUtil.getInstance().getApi().ord(27823,"158166443136227823",page,3,status)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<OrderBean>() {

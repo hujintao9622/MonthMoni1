@@ -20,8 +20,8 @@ public class OrderPresenter extends BasePresenter<IOrderContract.IView> implemen
     }
 
     @Override
-    public void getOrderData(int status) {
-        orderModel.getOrderData(status, new IOrderContract.IModel.IModelCallback() {
+    public void getOrderData(int page,int status) {
+        orderModel.getOrderData(page,status, new IOrderContract.IModel.IModelCallback() {
             @Override
             public void onSuccess(OrderBean orderBean) {
                 view.onSuccess(orderBean);
